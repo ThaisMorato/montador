@@ -22,8 +22,24 @@ int assemble(char *fileName) {
     Program program = readProgram(programFile);
 
     //just for testing:
-    printProgram(program);
-    cout<<program.lines[0][1];
+    //printProgram(program);
+
+    
+
+    firstStep(program);
+
+
+
+
+
+
+  
+
+
+
+
+
+
 
     programFile.close();
     return 0;
@@ -71,4 +87,27 @@ vector<string> getMeaningfulVec(string &line) {
     return meaningfulVec;
 }
 
+//seeks for some undetermined label/sysmbol and creates a symbol table
+int firstStep (Program &program){
+    Instruction instAux;
+    for(size_t i = 0; i<program.amountOfLines-1;  i++){
+        for(auto item: program.lines[i]){
+
+
+            //identificando R);
+            if((item != "R0") ) {
+                cout<<item + " diferente de R0"<<endl;
+            }
+            else {cout<<item +" É R0"<<endl;}
+            
+
+
+        }
+    }
+
+
+
+
+    return 0;
+}
 

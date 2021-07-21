@@ -14,16 +14,22 @@ void printProgram(Program &program) {
     return;
 }
 
+
+
+ ////////////////////////ASSEMBLE//////////////////////////
 int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program = readProgram(programFile);
 
     //just for testing:
     printProgram(program);
+    cout<<program.lines[0][1];
 
     programFile.close();
     return 0;
 }
+//////////////////////////////////////////////////////////
+
 
 Program readProgram(ifstream &programFile) {
     string line;
@@ -64,3 +70,5 @@ vector<string> getMeaningfulVec(string &line) {
     }
     return meaningfulVec;
 }
+
+

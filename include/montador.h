@@ -90,6 +90,7 @@ class Instruction {
 int assemble(char *fileName);  					//called in main
 Program readProgram(ifstream &programFile);		//read a file (programFile) and return a  Program instance
 vector<string> getMeaningfulVec(string &line);	
-int firstStep (Program &program, map<string, int> Reg_hash );
+int firstStep (Program &program, map<string, int> Hash, map<string, int> Sym );
+bool isNumber(const string& str);
 
 #endif

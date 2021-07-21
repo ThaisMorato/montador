@@ -22,7 +22,7 @@ int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program = readProgram(programFile);
 
-    map<string, int> Sym_hash {
+    map<string, int> known_hash {
         {"HALT" , 0},  // Stop the program.
         {"LOAD" , 1},  // Reg[R] <- Mem[M + PC]
         {"STORE" , 2}, // Mem[M + PC] <- Reg[R]
@@ -52,14 +52,19 @@ int assemble(char *fileName) {
         {"END",24},
     };
 
+    map<string, int> Symb_hash;
+
+
+
     //just for testing:
     //printProgram(program);
 
     
+//cout << known_hash.find("R3")->second ;
+    firstStep(program, known_hash, Symb_hash);
 
-    firstStep(program,Sym_hash);
+    
  
-
 
 
   
@@ -117,20 +122,35 @@ vector<string> getMeaningfulVec(string &line) {
 }
 
 //seeks for some undetermined label/sysmbol and creates a symbol table
-int firstStep (Program &program, map<string, int> Hash ){
+int firstStep (Program &program, map<string, int> Hash, map<string, int> Sym ){
     Instruction instAux;
+    bool isKnownCode =false;
+    map<string, int>::iterator it;
+
     for(size_t i = 0; i<program.amountOfLines-1;  i++){
         for(auto item: program.lines[i]){
 
+            //identificando );
+            if((Hash.find(item) == Hash.end()) &(!isNumber(item))) {
+                isKnownCode = false;
+                cout<<item;
 
-            //identificando R);
-            if((Hash.find(item) == Hash.end() ) ) {
-                cout<<item + " nao é um opcode/reg"<<endl;
+                it  = Sym.find(item);
+                if(it == Sym.end()){
+                    
+                   Sym.insert(pair<string,int>(item,10000)); 
+
+                } else{
+                    Sym.insert(pair<string,int>(it->first,program.amountOfLines));
+                    cout <<  it->first;
+
+
+                }
+                
+
+
             }
-            else {cout<<item +" É um opcode/reg"<<endl;}
-            
-
-
+            else {isKnownCode = true;}
         }
     }
 
@@ -139,4 +159,15 @@ int firstStep (Program &program, map<string, int> Hash ){
 
     return 0;
 }
+
+//checa se uma string contém um número
+bool isNumber(const string& str)
+{
+    for (char const &c : str) {
+        if (std::isdigit(c) == 0) return false;
+    }
+    return true;
+}
+
+
 

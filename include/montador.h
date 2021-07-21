@@ -24,7 +24,6 @@ using namespace std;
 
 
 
-
 enum Symbol {
     HALT = 0,  // Stop the program.
     LOAD = 1,  // Reg[R] <- Mem[M + PC]

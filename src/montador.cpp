@@ -22,15 +22,6 @@ int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program = readProgram(programFile);
 
-
-    map<string, int> Reg_hash {
-        {"R0",0},
-        {"R1",1},
-        {"R2",2},
-        {"R3",3},
-    };
-
-
     map<string, int> Sym_hash {
         {"HALT" , 0},  // Stop the program.
         {"LOAD" , 1},  // Reg[R] <- Mem[M + PC]
@@ -53,6 +44,12 @@ int assemble(char *fileName) {
         {"JN" , 18},   // If PSW[1] == 1, PC <- PC + M
         {"CALL" , 19}, // SP <- SP - 1; Mem[SP] <- PC; PC <- PC + M
         {"RET" , 20},  // PC <- Mem[SP]; SP <- SP + 1
+        {"R0",21},
+        {"R1",22},
+        {"R2",23},
+        {"R3",24},
+        {"WORD",24},
+        {"END",24},
     };
 
     //just for testing:

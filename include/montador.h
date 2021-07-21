@@ -22,29 +22,8 @@ using namespace std;
 //     }
 // };
 
-// map<string, int> Sym_hash {
-//         {"Halt" , 0},  // Stop the program.
-//         {"Load" , 1},  // Reg[R] <- Mem[M + PC]
-//         {"Store" , 2}, // Mem[M + PC] <- Reg[R]
-//         {"Read" , 3},  // Reg[R] <- input
-//         {"Write" , 4}, // output <- Reg[R]
-//         {"Copy" , 5},  // Reg[R1] <- Reg[R2], update PSW
-//         {"Push" , 6},  // SP <- SP - 1; Mem[SP] <- Reg[R]
-//         {"Pop" , 7},   // Reg[R] <- Mem[SP]; SP <- SP + 1;
-//         {"Add" , 8},   // Reg[R1] <- Reg[R1] + Reg[R2], update PSW
-//         {"Sub" , 9},   // Reg[R1] <- Reg[R1] - Reg[R2], update PSW
-//         {"Mul" , 10},  // Reg[R1] <- Reg[R1] * Reg[R2], update PSW
-//         {"Div" , 11},  // Reg[R1] <- Reg[R1] / Reg[R2], update PSW
-//         {"Mod" , 12},  // Reg[R1] <- Reg[R1] % Reg[R2], update PSW
-//         {"And" , 13},  // Reg[R1] <- Reg[R1] & Reg[R2], update PSW
-//         {"Or" , 14},   // Reg[R1] <- Reg[R1] | Reg[R2], update PSW
-//         {"Not" , 15},  // Reg[R1] <- ~Reg[R1], update PSW
-//         {"Jump" , 16}, // PC <- PC + M
-//         {"JZ" , 17},   // If PSW[0] == 1, PC <- PC + M
-//         {"JN" , 18},   // If PSW[1] == 1, PC <- PC + M
-//         {"Call" , 19}, // SP <- SP - 1; Mem[SP] <- PC; PC <- PC + M
-//         {"Ret" , 20},  // PC <- Mem[SP]; SP <- SP + 1
-//     };
+
+
 
 enum Symbol {
     HALT = 0,  // Stop the program.
@@ -68,6 +47,14 @@ enum Symbol {
     JN = 18,   // If PSW[1] == 1, PC <- PC + M
     CALL = 19, // SP <- SP - 1; Mem[SP] <- PC; PC <- PC + M
     RET = 20,  // PC <- Mem[SP]; SP <- SP + 1
+};
+
+
+enum Reg {
+    R0 = 0, 
+    R1 = 1,  
+    R2 = 2,
+    R3 = 3,  
 };
 
 
@@ -104,6 +91,6 @@ class Instruction {
 int assemble(char *fileName);  					//called in main
 Program readProgram(ifstream &programFile);		//read a file (programFile) and return a  Program instance
 vector<string> getMeaningfulVec(string &line);	
-int firstStep (Program &program);
+int firstStep (Program &program, map<string, int> Reg_hash );
 
 #endif

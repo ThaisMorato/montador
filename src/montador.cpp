@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "montador.h"
+#include <map>
 
 void printProgram(Program &program) {
     string command;
@@ -21,15 +22,46 @@ int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program = readProgram(programFile);
 
+
+    map<string, int> Reg_hash {
+        {"R0",0},
+        {"R1",1},
+        {"R2",2},
+        {"R3",3},
+    };
+
+
+    map<string, int> Sym_hash {
+        {"HALT" , 0},  // Stop the program.
+        {"LOAD" , 1},  // Reg[R] <- Mem[M + PC]
+        {"STORE" , 2}, // Mem[M + PC] <- Reg[R]
+        {"READ" , 3},  // Reg[R] <- input
+        {"WRITE" , 4}, // output <- Reg[R]
+        {"COPY" , 5},  // Reg[R1] <- Reg[R2], update PSW
+        {"PUSH" , 6},  // SP <- SP - 1; Mem[SP] <- Reg[R]
+        {"POP" , 7},   // Reg[R] <- Mem[SP]; SP <- SP + 1;
+        {"ADD" , 8},   // Reg[R1] <- Reg[R1] + Reg[R2], update PSW
+        {"SUB" , 9},   // Reg[R1] <- Reg[R1] - Reg[R2], update PSW
+        {"MUL" , 10},  // Reg[R1] <- Reg[R1] * Reg[R2], update PSW
+        {"DIV" , 11},  // Reg[R1] <- Reg[R1] / Reg[R2], update PSW
+        {"MOD" , 12},  // Reg[R1] <- Reg[R1] % Reg[R2], update PSW
+        {"AND" , 13},  // Reg[R1] <- Reg[R1] & Reg[R2], update PSW
+        {"OR" , 14},   // Reg[R1] <- Reg[R1] | Reg[R2], update PSW
+        {"NOT" , 15},  // Reg[R1] <- ~Reg[R1], update PSW
+        {"JUMP" , 16}, // PC <- PC + M
+        {"JZ" , 17},   // If PSW[0] == 1, PC <- PC + M
+        {"JN" , 18},   // If PSW[1] == 1, PC <- PC + M
+        {"CALL" , 19}, // SP <- SP - 1; Mem[SP] <- PC; PC <- PC + M
+        {"RET" , 20},  // PC <- Mem[SP]; SP <- SP + 1
+    };
+
     //just for testing:
     //printProgram(program);
 
     
 
-    firstStep(program);
-
-
-
+    firstStep(program,Sym_hash);
+ 
 
 
 
@@ -88,17 +120,17 @@ vector<string> getMeaningfulVec(string &line) {
 }
 
 //seeks for some undetermined label/sysmbol and creates a symbol table
-int firstStep (Program &program){
+int firstStep (Program &program, map<string, int> Hash ){
     Instruction instAux;
     for(size_t i = 0; i<program.amountOfLines-1;  i++){
         for(auto item: program.lines[i]){
 
 
             //identificando R);
-            if((item != "R0") ) {
-                cout<<item + " diferente de R0"<<endl;
+            if((Hash.find(item) == Hash.end() ) ) {
+                cout<<item + " nao é um opcode/reg"<<endl;
             }
-            else {cout<<item +" É R0"<<endl;}
+            else {cout<<item +" É um opcode/reg"<<endl;}
             
 
 

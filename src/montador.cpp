@@ -22,7 +22,7 @@ int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program = readProgram(programFile);
 
-    map<string, int> known_hash {
+const map<string, int> known_hash {
         {"HALT" , 0},  // Stop the program.
         {"LOAD" , 1},  // Reg[R] <- Mem[M + PC]
         {"STORE" , 2}, // Mem[M + PC] <- Reg[R]
@@ -52,7 +52,9 @@ int assemble(char *fileName) {
         {"END",24},
     };
 
-    map<string, int> Symb_hash;
+    map<string, int> Symb_hash; //tabela de symbolos a ser populada pela primeira etapa
+    firstStep(program, known_hash, Symb_hash);
+    cout<<Symb_hash["test:"]<<endl;
 
 
 
@@ -61,7 +63,10 @@ int assemble(char *fileName) {
 
     
 //cout << known_hash.find("R3")->second ;
-    firstStep(program, known_hash, Symb_hash);
+
+
+    //Symb_hash. (pair<string,int>("hene",48));
+
 
     
  
@@ -122,35 +127,47 @@ vector<string> getMeaningfulVec(string &line) {
 }
 
 //seeks for some undetermined label/sysmbol and creates a symbol table
-int firstStep (Program &program, map<string, int> Hash, map<string, int> Sym ){
+//it receives a program, a a dictionary with all commands (reg/opcodes) and a Symbol Hash of user diffined sysmbols.
+int firstStep ( Program &program, const map<string, int> Hash, map<string, int> &Sym ){
     Instruction instAux;
     bool isKnownCode =false;
     map<string, int>::iterator it;
+    string item_a; //iterator for Sym
+    int instLine = 0;
 
     for(size_t i = 0; i<program.amountOfLines-1;  i++){
+        instLine++;
         for(auto item: program.lines[i]){
-
-            //identificando );
-            if((Hash.find(item) == Hash.end()) &(!isNumber(item))) {
+            
+            if(item == "END") {return 0;};
+            
+            //identificando  comandos indefinidos;
+            
+            if((Hash.find(item) == Hash.end()) & (!isNumber(item))) { //unknown command
                 isKnownCode = false;
-                cout<<item;
 
-                it  = Sym.find(item);
-                if(it == Sym.end()){
+                if(!(item.back()== *LABEL_DELIMITER)) {item_a = item + *LABEL_DELIMITER;} else {item_a = item;}; //adds ':' to item's end
+
+
+                //cout<<item_a<<endl;
+                
+                it  = Sym.find(item_a);
+                if(it == Sym.end()){ //the unknonw command does NOT exist
                     
-                   Sym.insert(pair<string,int>(item,10000)); 
+                   Sym.insert(pair<string,int>(item_a,*MEM_SIZE)); 
+                   
 
-                } else{
-                    Sym.insert(pair<string,int>(it->first,program.amountOfLines));
-                    cout <<  it->first;
-
+                } 
+            else{//the unknonw command DOES exist
+                    it->second = instLine;
+                    
+                    //Sym.insert(pair<string,int>(it->first,program.amountOfLines));
+                    //cout <<  Sym["const100:"];
+                    //cout<<Sym[item_a]<<endl;
 
                 }
-                
-
-
             }
-            else {isKnownCode = true;}
+            else {isKnownCode = true;} //known command
         }
     }
 
@@ -160,7 +177,7 @@ int firstStep (Program &program, map<string, int> Hash, map<string, int> Sym ){
     return 0;
 }
 
-//checa se uma string contém um número
+//check se uma string contém um número
 bool isNumber(const string& str)
 {
     for (char const &c : str) {

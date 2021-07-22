@@ -10,6 +10,7 @@ using namespace std;
 //definitions
 #define COMMENT_DELIMITER ";"
 #define LABEL_DELIMITER ":"
+#define MEM_SIZE "1000"     //maximum memory used (first number after MV-EXE)
 
 //classes
 // class Symbol {
@@ -90,7 +91,7 @@ class Instruction {
 int assemble(char *fileName);  					//called in main
 Program readProgram(ifstream &programFile);		//read a file (programFile) and return a  Program instance
 vector<string> getMeaningfulVec(string &line);	
-int firstStep (Program &program, map<string, int> Hash, map<string, int> Sym );
+int firstStep ( Program &program, const map<string, int> Hash, map<string, int> &Sym );
 bool isNumber(const string& str);
 
 #endif

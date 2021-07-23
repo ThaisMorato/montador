@@ -15,8 +15,6 @@ void printProgram(Program &program) {
     return;
 }
 
-
-
  ////////////////////////ASSEMBLE//////////////////////////
 int assemble(char *fileName) {
     ifstream programFile(fileName);
@@ -44,28 +42,25 @@ const map<string, int> known_hash {
         {"JN" , 18},   // If PSW[1] == 1, PC <- PC + M
         {"CALL" , 19}, // SP <- SP - 1; Mem[SP] <- PC; PC <- PC + M
         {"RET" , 20},  // PC <- Mem[SP]; SP <- SP + 1
-        {"R0",21},
-        {"R1",22},
-        {"R2",23},
-        {"R3",24},
-        {"WORD",24},
-        {"END",24},
+        {"R0",0},
+        {"R1",1},
+        {"R2",2},
+        {"R3",3},
+        {"WORD",0},
+        {"END",0},
     };
 
     map<string, int> Symb_hash; //tabela de symbolos a ser populada pela primeira etapa
-    firstStep(program, known_hash, Symb_hash);
-    cout<<Symb_hash["test:"]<<endl;
+     firstStep(program, known_hash, Symb_hash);
 
+     //cout<<Symb_hash["test:"]<<endl;
+    
+    vector<int> finalBin = secondStep(program, known_hash, Symb_hash);
+    cout << finalBin[2]<<endl;
 
-
-    //just for testing:
+  
     //printProgram(program);
 
-    
-//cout << known_hash.find("R3")->second ;
-
-
-    //Symb_hash. (pair<string,int>("hene",48));
 
 
     
@@ -128,53 +123,66 @@ vector<string> getMeaningfulVec(string &line) {
 
 //seeks for some undetermined label/sysmbol and creates a symbol table
 //it receives a program, a a dictionary with all commands (reg/opcodes) and a Symbol Hash of user diffined sysmbols.
-int firstStep ( Program &program, const map<string, int> Hash, map<string, int> &Sym ){
+int firstStep ( const Program program, const map<string, int> Hash, map<string, int> &Sym ){
     Instruction instAux;
-    bool isKnownCode =false;
     map<string, int>::iterator it;
     string item_a; //iterator for Sym
     int instLine = 0;
 
-    for(size_t i = 0; i<program.amountOfLines-1;  i++){
+    for(size_t i = 0; i<program.amountOfLines;  i++){
         instLine++;
         for(auto item: program.lines[i]){
-            
-            if(item == "END") {return 0;};
             
             //identificando  comandos indefinidos;
             
             if((Hash.find(item) == Hash.end()) & (!isNumber(item))) { //unknown command
-                isKnownCode = false;
 
                 if(!(item.back()== *LABEL_DELIMITER)) {item_a = item + *LABEL_DELIMITER;} else {item_a = item;}; //adds ':' to item's end
-
-
-                //cout<<item_a<<endl;
                 
                 it  = Sym.find(item_a);
                 if(it == Sym.end()){ //the unknonw command does NOT exist
-                    
                    Sym.insert(pair<string,int>(item_a,*MEM_SIZE)); 
-                   
-
                 } 
             else{//the unknonw command DOES exist
                     it->second = instLine;
-                    
-                    //Sym.insert(pair<string,int>(it->first,program.amountOfLines));
-                    //cout <<  Sym["const100:"];
-                    //cout<<Sym[item_a]<<endl;
-
                 }
             }
-            else {isKnownCode = true;} //known command
+            else {} //known command
         }
     }
-
-
-
-
     return 0;
+}
+
+
+
+vector<int> secondStep (const Program program, map<string, int> Hash,  map<string, int> Sym){
+    int instLine = 0;   //current isntruction line
+    bool WORDappear = 0 ; //accommodates the memory position of WORD storage
+    vector<int> finalBin; //vector with the final decial numbers to be outputed
+    map<string, int>::iterator it;
+
+    for(size_t i = 0; i<program.amountOfLines;  i++){
+        instLine++;
+        for(auto item: program.lines[i]){
+            if(item == "END") return finalBin;//stops if END is found
+
+
+            if((Hash.find(item) == Hash.end()) & (!isNumber(item)) & (item.back() != ':')) { //found a Symbol. substitute with its memory position 
+
+                it  = Sym.find(item + ':');
+                finalBin.push_back(it->second);
+                
+            } 
+            else if(item == "WORD"){
+                WORDappear = true;
+            }
+            else if(isNumber(item) & (WORDappear)){
+                finalBin.push_back(stoi(item));
+                WORDappear = false;
+            }
+        }
+    }
+    return finalBin;
 }
 
 //check se uma string contém um número
@@ -186,5 +194,10 @@ bool isNumber(const string& str)
     return true;
 }
 
+void generateInstructions(){
 
 
+
+
+
+}

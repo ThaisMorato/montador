@@ -4,7 +4,8 @@
 
 READ R0             ; Lê o inteiro x e armazena no registrador 0
 LOAD R1 const100    ; Carrega o inteiro 100 e armazena no
-LOAD R1 test        ; ADICIONADO APENAS PARA TESTAR A PRIMEIRA ETAPA
+STORE R1 test       ; ADICIONADO APENAS PARA TESTAR A PRIMEIRA ETAPA
+STORE R1 test2       ;
 ADD R0 R1           ; R0 = R0 + R1, i.e. R0 = x + 100
 WRITE R0            ; Imprime o resultado da operação
 HALT                ; Finaliza a execução dod programa
@@ -12,6 +13,8 @@ HALT ;
 
 
 const100:   WORD 100
-test: 	    WORD 100
+
+test2: 	    WORD 200
+test: 	    WORD 300
 END
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

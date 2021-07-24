@@ -10,7 +10,7 @@ int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program;
     StringIntHash symbolHash;
-    
+
     genHeader(MEM_SIZE);
     firstStep(programFile, program, symbolHash);
     secondStep(program, symbolHash);
@@ -23,8 +23,8 @@ int assemble(char *fileName) {
 }
 
 void genHeader(string memSize){
-    cout<< "MV-EXE"<<endl;
-    cout<< memSize + " 100 999 100"<<endl;
+    cout<< "MV-EXE\n"<<endl;
+    cout<< memSize + " 100 999 100\n"<<endl;
     return;
 }
 

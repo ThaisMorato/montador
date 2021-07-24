@@ -5,37 +5,13 @@
 StringIntHash instructionHash(Instructions);
 StringIntHash registerHash(Registers);
 
-// void printProgram(Program &program) {
-//     string command;
-//     cout << endl << "--------------------------" << endl;
-//     cout << "Programa" << endl;
-//     cout << "--------------------------" << endl;
-//     for(size_t i = 0; i < program.amountOfLines; i++) {
-//         for(size_t j = 0; j < program.lines[i].size(); j++) {
-//             command = command + " | " + program.lines[i][j];
-//         }
-//         cout << i << command + " | " << endl;
-//         command.clear();
-//     }
-//     return;
-// }
-
-// void printSymbolHash(SymbolHash &symbolHash) {
-//     string command;
-//     cout << endl << "--------------------------" << endl;
-//     cout << "Tabela de Simbolos" << endl;
-//     cout << "--------------------------" << endl;
-//     for(auto it = symbolHash.hash.cbegin(); it != symbolHash.hash.cend(); ++it)
-//     {
-//         std::cout << it->first << " : " << it->second << endl;
-//     }
-//     return;
-// }
 
 int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program;
     StringIntHash symbolHash;
+    
+    genHeader(MEM_SIZE);
     firstStep(programFile, program, symbolHash);
     secondStep(program, symbolHash);
   
@@ -44,6 +20,12 @@ int assemble(char *fileName) {
 
     programFile.close();
     return 0;
+}
+
+void genHeader(string memSize){
+    cout<< "MV-EXE"<<endl;
+    cout<< memSize + " 100 999 100"<<endl;
+    return;
 }
 
 void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHash) {
@@ -135,39 +117,3 @@ vector<string> getMeaningfulVec(string &line) {
     return meaningfulVec;
 }
 
-// vector<int> secondStep (const Program program, map<string, int> Hash,  map<string, int> Sym){
-//     int instLine = 0;   //current isntruction line
-//     bool WORDappear = 0 ; //accommodates the memory position of WORD storage
-//     vector<int> finalBin; //vector with the final decial numbers to be outputed
-//     map<string, int>::iterator it;
-
-//     for(size_t i = 0; i<program.amountOfLines;  i++){
-//         instLine++;
-//         for(auto item: program.lines[i]){
-//             if(item == "END") return finalBin;//stops if END is found
-
-
-//             if((Hash.find(item) == Hash.end()) & (!isNumber(item)) & (item.back() != ':')) { //found a Symbol. substitute with its memory position 
-
-//                 it  = Sym.find(item + ':');
-//                 finalBin.push_back(it->second);
-                
-//             } 
-//             else if(item == "WORD"){
-//                 WORDappear = true;
-//             }
-//             else if(isNumber(item) & (WORDappear)){
-//                 finalBin.push_back(stoi(item));
-//                 WORDappear = false;
-//             }
-//         }
-//     }
-//     return finalBin;
-// }
-
-// bool isNumber(const string &str) {
-//     for(const char &c : str) {
-//         if (isdigit(c) != 0) return false;
-//     }
-//     return true;
-// }

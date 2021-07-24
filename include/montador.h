@@ -68,6 +68,7 @@ int assemble(char *fileName);
 void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHash);
 void secondStep(Program &program, StringIntHash &symbolHash);
 vector<string> getMeaningfulVec(string &line);	
+void genHeader(string memSize);
 
 const map<string, int> Instructions {
     {"HALT",    0}, // Stop the program

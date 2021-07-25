@@ -1,0 +1,51 @@
+;   Fibonacci
+;   ______________________________________________________________
+;   
+;   Programa que lê um número N da entrada e imprime o N-ésimo
+;   número de Fibonacci
+
+READ R0                     ; R0 <- N
+LOAD R2 const2
+SUB R0 R2                   ; R0 <- N - 2
+JN isOne
+JZ isTwo
+JUMP isGreater
+
+isOne: LOAD R1 const0
+STORE R1 result
+JUMP finish
+
+isTwo: LOAD R1 const1
+STORE R1 result
+JUMP finish
+
+isGreater: LOAD R1 const1   ; R1 é o contador de iterações
+loop: LOAD R2 pp
+LOAD R3 p
+ADD R2 R3
+STORE R3 pp
+STORE R2 p
+STORE R2 result
+
+; checa condição do loop
+COPY R2 R0
+SUB R2 R1                   ; confere se atingiu a última iteração
+JZ finish                   ; se sim, termina o programa
+LOAD R2 const1              ; se não
+ADD R1 R2                   ; incrementa contador
+JUMP loop                   ; faz mais uma iteração
+
+finish: LOAD R3 result
+WRITE R3
+
+HALT
+
+const0: WORD 0
+const1: WORD 1
+const2: WORD 2
+
+pp: WORD 0
+p: WORD 1
+result: WORD 0
+
+END

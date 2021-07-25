@@ -1,0 +1,119 @@
+;;;;; Recebe 5 entradas e computa a mediana ;;;;;;;
+
+
+
+
+; Grava as 5 entradas nas posicoes de memoria memx;
+READ    R0 
+STORE   R0 mem4 
+READ    R0 
+STORE   R0 mem3 
+READ    R0 
+STORE   R0 mem2 
+READ    R0 
+STORE   R0 mem1 
+READ    R1 
+STORE   R1 mem0
+
+JUMP if1                                        
+
+
+;;;;;; Implementacao de um BubbleSort ;;;;;;;;
+
+
+if1:    LOAD R1 mem4            ;Recupera mem4 da memoria                             
+        LOAD R0 mem3
+        COPY    R2 R1           ;Salva R1
+        SUB     R1 R0           ;Confere se R1>R0
+        JN      swap1           ;Troca mem4 por mem3 se R1>R0
+        JUMP    if2             ;Caso R1<R0, pula para if2 
+
+swap1:  STORE   R2 mem3
+        STORE   R0 mem4
+        JUMP    if2
+
+if2:    LOAD    R1 mem3
+        LOAD    R0 mem2
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap2
+        JUMP    if3
+
+swap2:  STORE   R2 mem2
+        STORE   R0 mem3
+        JUMP    if3
+
+if3:    LOAD    R1 mem2
+        LOAD    R0 mem1
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap3
+        JUMP    if4
+
+swap3:  STORE   R2 mem1
+        STORE   R0 mem2
+        JUMP    if4
+
+if4:    LOAD    R1 mem1
+        LOAD    R0 mem0
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap4
+        JUMP    it1 
+
+swap4:  STORE   R2 mem0
+        STORE   R0 mem1
+        JUMP it1
+
+
+it1:    LOAD R1 const1                  ;Coloca constante 1 em R1
+        LOAD R0 const1                  ;R0 é um valor para comparacao
+        ADD     R3 R1                   ;R3++. R3 é o contador de iteracao
+        COPY    R2 R3                   
+        SUB     R2 R0
+        JZ      if1                     ;Pula para if1 dependendo da iteracao atual
+
+
+        LOAD R0 const2
+        ADD     R3 R1
+        COPY    R2 R3
+        SUB     R2 R0
+        JZ      if2
+
+
+
+        LOAD R0 const3
+        ADD     R3 R1
+        COPY    R2 R3
+        SUB     R2 R0
+        JZ      if3
+
+
+
+        LOAD R0 const4
+        ADD     R3 R1
+        COPY    R2 R3
+        SUB     R2 R0
+        JZ      if4
+        JUMP print
+
+
+
+print:  LOAD R0 mem2
+        WRITE  R0
+        HALT
+
+
+mem0:   WORD 0
+mem1:   WORD 1
+mem2:   WORD 2
+mem3:   WORD 3
+mem4:   WORD 4
+
+const1: WORD 1
+const2: WORD 2
+const3: WORD 3
+const4: WORD 4
+
+
+END

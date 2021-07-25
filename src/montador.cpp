@@ -5,15 +5,42 @@
 StringIntHash instructionHash(Instructions);
 StringIntHash registerHash(Registers);
 
+// void printProgram(Program &program) {
+//     string command;
+//     cout << endl << "--------------------------" << endl;
+//     cout << "Programa" << endl;
+//     cout << "--------------------------" << endl;
+//     for(size_t i = 0; i < program.amountOfLines; i++) {
+//         for(size_t j = 0; j < program.lines[i].size(); j++) {
+//             command = command + " | " + program.lines[i][j];
+//         }
+//         cout << i + 1 << command + " | " << endl;
+//         command.clear();
+//     }
+//     return;
+// }
+
+// void printSymbolHash(StringIntHash &symbolHash) {
+//     string command;
+//     cout << endl << "--------------------------" << endl;
+//     cout << "Tabela de Simbolos" << endl;
+//     cout << "--------------------------" << endl;
+//     for(auto it = symbolHash.hash.cbegin(); it != symbolHash.hash.cend(); ++it)
+//     {
+//         std::cout << it->first << " : " << it->second << endl;
+//     }
+//     return;
+// }
 
 int assemble(char *fileName) {
     ifstream programFile(fileName);
     Program program;
     StringIntHash symbolHash;
+    string machineCommands;
 
-    genHeader(MEM_SIZE);
     firstStep(programFile, program, symbolHash);
-    secondStep(program, symbolHash);
+    int machineCommandAmmount = secondStep(program, symbolHash, machineCommands);
+    genAssemblerOutput(machineCommands, machineCommandAmmount);
   
     // printProgram(program);
     // printSymbolHash(symbolHash);
@@ -22,10 +49,10 @@ int assemble(char *fileName) {
     return 0;
 }
 
-void genHeader(string memSize){
-    cout<< "MV-EXE\n"<<endl;
-    cout<< memSize + " 100 999 100\n"<<endl;
-    return;
+void genAssemblerOutput(string machineCommands, int machineCommandAmmount) {
+    cout << "MV-EXE\n\n";
+    cout << to_string(machineCommandAmmount) + " 100 999 100\n\n";
+    cout << machineCommands + "\n";
 }
 
 void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHash) {
@@ -60,10 +87,9 @@ void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHas
     return;
 }
 
-void secondStep(Program &program, StringIntHash &symbolHash) {
+int secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands) {
     string command;
     int correspondent;
-    vector<int> machineCommands;
     int machineCommandAmmount = 0;
     for(size_t i = 0; i < program.amountOfLines; i++) {
         for(size_t j = 0; j < program.lines[i].size(); j++) {
@@ -76,17 +102,16 @@ void secondStep(Program &program, StringIntHash &symbolHash) {
                 correspondent = symbolHash.getCorrespondent(command);
             }
             if(correspondent >= 0) {
-                machineCommands.push_back(correspondent);
+                machineCommands = machineCommands + to_string(correspondent) + " ";
                 machineCommandAmmount++;
-                cout << correspondent << " ";
             }
             else {
-                machineCommands.push_back(atoi(command.c_str()));
+                machineCommands = machineCommands + command + " ";
                 machineCommandAmmount++;
-                cout << atoi(command.c_str()) << " ";
             }
         }
     }
+    return machineCommandAmmount;
 }
 
 vector<string> getMeaningfulVec(string &line) {

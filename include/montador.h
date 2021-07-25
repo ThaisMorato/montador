@@ -66,9 +66,9 @@ class Program {
 //assembler functions
 int assemble(char *fileName);
 void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHash);
-void secondStep(Program &program, StringIntHash &symbolHash);
+int secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands);
+void genAssemblerOutput(string machineCommands, int machineCommandAmmount);
 vector<string> getMeaningfulVec(string &line);	
-void genHeader(string memSize);
 
 const map<string, int> Instructions {
     {"HALT",    0}, // Stop the program

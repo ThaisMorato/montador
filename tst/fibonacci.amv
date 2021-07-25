@@ -22,16 +22,17 @@ JUMP finish
 isGreater: LOAD R1 const1   ; R1 é o contador de iterações
 loop: LOAD R2 pp
 LOAD R3 p
-SUM R2 R3
+ADD R2 R3
 STORE R3 pp
 STORE R2 p
+STORE R2 result
 
 ; checa condição do loop
 COPY R2 R0
 SUB R2 R1                   ; confere se atingiu a última iteração
 JZ finish                   ; se sim, termina o programa
 LOAD R2 const1              ; se não
-SUM R1 R2                   ; incrementa contador
+ADD R1 R2                   ; incrementa contador
 JUMP loop                   ; faz mais uma iteração
 
 finish: LOAD R3 result
@@ -43,7 +44,6 @@ const0: WORD 0
 const1: WORD 1
 const2: WORD 2
 
-i: WORD 1
 pp: WORD 0
 p: WORD 1
 result: WORD 0

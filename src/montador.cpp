@@ -39,8 +39,8 @@ int assemble(char *fileName) {
     string machineCommands;
 
     firstStep(programFile, program, symbolHash);
-    int machineCommandAmmount = secondStep(program, symbolHash, machineCommands);
-    genAssemblerOutput(machineCommands, machineCommandAmmount);
+    secondStep(program, symbolHash, machineCommands);
+    genAssemblerOutput(machineCommands, program.amountOfCommands);
   
     // printProgram(program);
     // printSymbolHash(symbolHash);
@@ -68,17 +68,17 @@ void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHas
         if(meaningfulVec.size() > 0) {
             command = meaningfulVec[0];
             if(command == PSEUDO_INST_WORD && !symbol.empty() && meaningfulVec.size() > 1) {
+                symbolHash.addToHash(symbol, program.amountOfCommands + 1);
                 program.addLine({meaningfulVec[1]});
-                symbolHash.addToHash(symbol, program.amountOfLines);
             }
             else if(command == PSEUDO_INST_END) {
                 return;
             }
             else if(instructionHash.getCorrespondent(command) >= 0) {
-                program.addLine(meaningfulVec);
                 if(!symbol.empty()) {
-                    symbolHash.addToHash(symbol, program.amountOfLines);
+                    symbolHash.addToHash(symbol, program.amountOfCommands + 1);
                 }
+                program.addLine(meaningfulVec);
             }
         }
         symbol.clear();
@@ -87,31 +87,33 @@ void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHas
     return;
 }
 
-int secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands) {
+void secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands) {
     string command;
     int correspondent;
-    int machineCommandAmmount = 0;
+    int machineCommand;
+    int currentCommand = 1;
     for(size_t i = 0; i < program.amountOfLines; i++) {
         for(size_t j = 0; j < program.lines[i].size(); j++) {
             command = program.lines[i][j];
             correspondent = instructionHash.getCorrespondent(command);
+            machineCommand = correspondent;
             if(correspondent < 0) {
                 correspondent = registerHash.getCorrespondent(command);
+                machineCommand = correspondent;
             }
             if(correspondent < 0) {
                 correspondent = symbolHash.getCorrespondent(command);
+                machineCommand = correspondent - (currentCommand + 1);
             }
             if(correspondent >= 0) {
-                machineCommands = machineCommands + to_string(correspondent) + " ";
-                machineCommandAmmount++;
+                machineCommands = machineCommands + to_string(machineCommand) + " ";
             }
             else {
                 machineCommands = machineCommands + command + " ";
-                machineCommandAmmount++;
             }
+            currentCommand++;
         }
     }
-    return machineCommandAmmount;
 }
 
 vector<string> getMeaningfulVec(string &line) {

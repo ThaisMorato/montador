@@ -39,37 +39,26 @@ class Program {
     public:
         vector<vector<string>> lines;
         size_t amountOfLines;
+        int amountOfCommands;
         Program() {
             amountOfLines = 0;
+            amountOfCommands = 0;
         }
         void addLine(vector<string> line) {
             lines.push_back(line);
             amountOfLines++;
+            amountOfCommands = amountOfCommands + line.size();
         }
 };
-
-//INUTIL POR ENQUANTO: class to accommodate an instruction
-// class Instruction {
-//     public:
-// 	    int      opcode;
-//         vector<int> operands; // 0, 1, or 2 operands, depending on the symbol <sym>.
-//         int         mem_addr;
-
-
-//         void setInstruction (int opcode, vector<int> operands, int mem_addr ){
-//             this->opcode =      opcode;
-//             this->operands =    operands;
-//             this->mem_addr =    mem_addr;
-//         }
-// };
 
 //assembler functions
 int assemble(char *fileName);
 void firstStep(ifstream &programFile, Program &program, StringIntHash &symbolHash);
-int secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands);
+void secondStep(Program &program, StringIntHash &symbolHash, string &machineCommands);
 void genAssemblerOutput(string machineCommands, int machineCommandAmmount);
 vector<string> getMeaningfulVec(string &line);	
 
+//instructions
 const map<string, int> Instructions {
     {"HALT",    0}, // Stop the program
     {"LOAD",    1}, // Reg[R] <- Mem[M + PC]
@@ -94,10 +83,11 @@ const map<string, int> Instructions {
     {"RET",    20}, // PC <- Mem[SP]; SP <- SP + 1
 };
 
-//Pseudo-instructions
+//pseudo-instructions
 #define PSEUDO_INST_WORD "WORD"
 #define PSEUDO_INST_END "END"
 
+//registers
 const map<string, int> Registers {
     {"R0",      0},
     {"R1",      1},

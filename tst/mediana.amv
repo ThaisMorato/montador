@@ -126,14 +126,14 @@ swap9:  STORE   R2 mem2
 
 
 
-if10:    LOAD R1 mem4            ;Recupera mem4 da memoria                             
+if10:   LOAD R1 mem4            ;Recupera mem4 da memoria                             
         LOAD R0 mem3
         COPY    R2 R1           ;Salva R1
         SUB     R1 R0           ;Confere se R1>R0
         JN      swap1           ;Troca mem4 por mem3 se R1>R0
         JUMP    print             ;Caso R1<R0, pula para if2 
 
-swap10:  STORE   R2 mem3
+swap10: STORE   R2 mem3
         STORE   R0 mem4
         JUMP    print
 

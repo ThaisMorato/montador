@@ -1,0 +1,41 @@
+; Teste para operacoes binarias e aritimeticas
+
+
+LOAD    R1 const2
+LOAD    R0 const5
+
+
+MUL     R0 R1
+WRITE   R0
+
+LOAD    R1 const4
+DIV     R0 R1
+WRITE   R0
+
+LOAD    R1 const5
+MOD     R1 R0
+WRITE   R1
+
+LOAD    R1 const5
+LOAD    R0 const4
+AND     R1 R0
+WRITE   R1
+
+LOAD    R1 const5
+LOAD    R0 const4
+OR      R1 R0
+WRITE   R1
+
+LOAD    R0 const5
+NOT     R0 
+WRITE   R0
+
+HALT
+
+
+
+const2: WORD 2
+const4: WORD 4
+const5: WORD 5
+
+END

@@ -1,0 +1,27 @@
+;   Soma
+;   ______________________________________________________________
+;   
+;   Programa que lê dois números na entrada e imprime a soma
+;   utilizando subrotina e leitura e escrita na pilha
+
+READ R0
+READ R1
+
+PUSH R0
+PUSH R1
+CALL soma
+
+POP R2
+WRITE R2
+
+HALT
+
+soma: POP R0    ; pega endereço de retorno
+POP R1          ; pega argumento 1
+POP R2          ; pega argumento 2
+ADD R1 R2       ; calcula a soma
+PUSH R1         ; armazena resultado da soma
+PUSH R0         ; armazena endereço de retorno
+RET
+
+END

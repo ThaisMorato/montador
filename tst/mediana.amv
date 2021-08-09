@@ -5,15 +5,16 @@
 
 ; Grava as 5 entradas nas posicoes de memoria memx;
 READ    R0 
-STORE   R0 mem4 
+STORE   R0 mem0
 READ    R0 
-STORE   R0 mem3 
+STORE   R0 mem1 
 READ    R0 
 STORE   R0 mem2 
 READ    R0 
-STORE   R0 mem1 
+STORE   R0 mem3 
 READ    R1 
-STORE   R1 mem0
+STORE   R1 mem4
+
 
 JUMP if1                                        
 
@@ -59,48 +60,88 @@ if4:    LOAD    R1 mem1
         COPY    R2 R1
         SUB     R1 R0
         JN      swap4
-        JUMP    it1 
+        JUMP    if5 
 
 swap4:  STORE   R2 mem0
         STORE   R0 mem1
-        JUMP it1
-
-
-it1:    LOAD R1 const1                  ;Coloca constante 1 em R1
-        LOAD R0 const1                  ;R0 é um valor para comparacao
-        ADD     R3 R1                   ;R3++. R3 é o contador de iteracao
-        COPY    R2 R3                   
-        SUB     R2 R0
-        JZ      if1                     ;Pula para if1 dependendo da iteracao atual
-
-
-        LOAD R0 const2
-        ADD     R3 R1
-        COPY    R2 R3
-        SUB     R2 R0
-        JZ      if2
+        JUMP if5
 
 
 
-        LOAD R0 const3
-        ADD     R3 R1
-        COPY    R2 R3
-        SUB     R2 R0
-        JZ      if3
+if5:    LOAD R1 mem4                                       
+        LOAD R0 mem3
+        COPY    R2 R1          
+        SUB     R1 R0          
+        JN      swap1          
+        JUMP    if6             
+
+swap5:  STORE   R2 mem3
+        STORE   R0 mem4
+        JUMP    if6
+
+if6:    LOAD    R1 mem3
+        LOAD    R0 mem2
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap2
+        JUMP    if7
+
+swap6:  STORE   R2 mem2
+        STORE   R0 mem3
+        JUMP    if7
+
+if7:    LOAD    R1 mem2
+        LOAD    R0 mem1
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap3
+        JUMP    if8
+
+swap7:  STORE   R2 mem1
+        STORE   R0 mem2
+        JUMP    if8
+
+
+if8:    LOAD R1 mem4            ;Recupera mem4 da memoria                             
+        LOAD R0 mem3
+        COPY    R2 R1           ;Salva R1
+        SUB     R1 R0           ;Confere se R1>R0
+        JN      swap1           ;Troca mem4 por mem3 se R1>R0
+        JUMP    if9             ;Caso R1<R0, pula para if9 
+
+swap8:  STORE   R2 mem3
+        STORE   R0 mem4
+        JUMP    if9
+
+if9:    LOAD    R1 mem3
+        LOAD    R0 mem2
+        COPY    R2 R1
+        SUB     R1 R0
+        JN      swap2
+        JUMP    if10
+
+swap9:  STORE   R2 mem2
+        STORE   R0 mem3
+        JUMP    if10
 
 
 
-        LOAD R0 const4
-        ADD     R3 R1
-        COPY    R2 R3
-        SUB     R2 R0
-        JZ      if4
-        JUMP print
+if10:   LOAD R1 mem4            ;Recupera mem4 da memoria                             
+        LOAD R0 mem3
+        COPY    R2 R1           ;Salva R1
+        SUB     R1 R0           ;Confere se R1>R0
+        JN      swap1           ;Troca mem4 por mem3 se R1>R0
+        JUMP    print             ;Caso R1<R0, pula para if2 
+
+swap10: STORE   R2 mem3
+        STORE   R0 mem4
+        JUMP    print
+
 
 
 
 print:  LOAD R0 mem2
-        WRITE  R0
+        WRITE R0        
         HALT
 
 
@@ -110,6 +151,7 @@ mem2:   WORD 2
 mem3:   WORD 3
 mem4:   WORD 4
 
+const1: WORD 0
 const1: WORD 1
 const2: WORD 2
 const3: WORD 3
